@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101017">
+<title>CASH DROP — демо</title>
+<style>
+:root{
+  --bg:#101017;
+  --panel:#191922;
+  --panel2:#22222f;
+  --text:#f4f3ff;
+  --muted:#9898af;
+  --accent:#beff47;
+  --purple:#9f78ff;
+  --red:#ff6684;
+  --border:#ffffff10;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:
+    radial-gradient(ellipse at 15% 0%,#29203f70,transparent 40%),
+    var(--bg);
+  color:var(--text);
+  font-family:Inter,Arial,sans-serif;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}
+button,input,select{outline-offset:4px}
+button{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px 17px;
+  background:var(--panel2);
+  color:var(--text);
+  transition:background .2s,transform .2s;
+}
+button:hover:not(:disabled){background:#323243}
+button:active:not(:disabled){transform:scale(.97)}
+.primary{background:var(--accent);color:#172000;font-weight:800}
+.primary:hover:not(:disabled){background:#d0ff7f}
+.danger{color:var(--red)}
+input,select{
+  background:#101017;
+  border:1px solid #ffffff18;
+  border-radius:12px;
+  padding:13px;
+  color:var(--text);
+  min-width:0;
+}
+header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  border-bottom:1px solid var(--border);
+  background:#101017ed;
+  backdrop-filter:blur(18px);
+}
+.header{
+  max-width:1440px;
+  margin:auto;
+  padding:16px 24px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.logo{
+  font-size:25px;
+  font-weight:1000;
+  letter-spacing:-1px;
+  white-space:nowrap;
+}
+.logo span{color:var(--accent)}
+.demo{
+  font-size:10px;
+  padding:5px 7px;
+  color:var(--accent);
+  background:#beff4715;
+  border-radius:6px;
+  letter-spacing:1px;
+}
+.balance{
+  margin-left:auto;
+  text-align:right;
+  font-weight:800;
+  white-space:nowrap;
+}
+.balance small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-bottom:4px;
+}
+main{max-width:1440px;margin:auto;padding:26px 24px 60px}
+.hero{
+  position:relative;
+  overflow:hidden;
+  border:1px solid #a787ff30;
+  border-radius:24px;
+  padding:34px;
+  background:linear-gradient(115deg,#302343,#171822 70%);
+  margin-bottom:24px;
+}
+.hero:after{
+  content:"₽";
+  position:absolute;
+  right:6%;
+  top:-50px;
+  font-size:280px;
+  font-weight:1000;
+  transform:rotate(-15deg);
+  color:#beff4710;
+  pointer-events:none;
+}
+.hero h1{font-size:38px;margin:0 0 12px;position:relative;z-index:1}
+.hero p{color:#b6b1cc;max-width:650px;line-height:1.6;position:relative;z-index:1}
+.tags{display:flex;gap:10px;flex-wrap:wrap}
+.tag{background:#ffffff0b;border:1px solid var(--border);border-radius:9px;padding:9px 12px;font-size:12px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}
+.toolbar input{flex:1;min-width:190px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tabs .active{background:var(--accent);color:#172000;font-weight:800}
+.section-title{display:flex;align-items:center;gap:12px;margin:32px 0 17px;font-size:22px}
+.section-title small{color:var(--muted);font-size:12px;font-weight:normal}
+.grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}
+.card{
+  position:relative;
+  background:linear-gradient(160deg,#22222f,#171720);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:14px;
+  text-align:center;
+  transition:transform .2s,border-color .2s;
+}
+.card:hover{transform:translateY(-4px);border-color:#a787ff66}
+.card.unavailable{opacity:.55}
+.favorite{
+  position:absolute;
+  right:9px;
+  top:9px;
+  z-index:2;
+  padding:5px 8px;
+  border-radius:9px;
+  background:#14141cb0;
+  color:#78788b;
+}
+.favorite.chosen{color:#ffd75a}
+.art{
+  height:125px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+.art:before{
+  content:"";
+  position:absolute;
+  width:95px;
+  height:70px;
+  background:var(--case-color);
+  opacity:.16;
+  filter:blur(22px);
+}
+.box{
+  width:100px;
+  height:73px;
+  position:relative;
+  border:2px solid var(--case-color);
+  border-radius:11px;
+  background:linear-gradient(145deg,#ffffff15,#00000040);
+  transform:perspective(350px) rotateY(-16deg) rotateX(8deg);
+  box-shadow:0 10px 25px #0008,inset 0 0 22px #ffffff08;
+  color:var(--case-color);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+  font-weight:1000;
+}
+.box:before{
+  content:"";
+  position:absolute;
+  top:12px;
+  left:-2px;
+  right:-2px;
+  border-top:2px solid var(--case-color);
+}
+.box:after{
+  content:"";
+  position:absolute;
+  top:-13px;
+  width:35px;
+  height:12px;
+  border:3px solid var(--case-color);
+  border-bottom:0;
+  border-radius:7px 7px 0 0;
+}
+.card h3{font-size:14px;min-height:34px;margin:7px 0 10px;line-height:1.3}
+.price{font-weight:900;font-size:17px;margin-bottom:12px}
+.price del{font-size:11px;color:var(--muted);margin-right:5px;font-weight:normal}
+.card .open{width:100%;padding:10px;font-size:12px}
+.badge{
+  position:absolute;
+  left:10px;
+  top:10px;
+  background:#beff471c;
+  color:var(--accent);
+  border-radius:6px;
+  padding:4px 6px;
+  font-size:10px;
+}
+.muted{color:var(--muted)}
+.empty{padding:50px;text-align:center;color:var(--muted)}
+.game-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.game-card{text-align:left;min-height:145px;padding:22px;background:linear-gradient(145deg,#282038,#191922)}
+.game-card b{display:block;margin:12px 0 6px;font-size:19px}
+.game-card span{font-size:12px;color:var(--muted)}
+.game-icon{font-size:29px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat{padding:20px;background:var(--panel);border-radius:15px;border:1px solid var(--border)}
+.stat small{display:block;color:var(--muted);margin-bottom:10px}
+.stat b{font-size:23px}
+.history{background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.row{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:15px 18px;border-bottom:1px solid var(--border)}
+.row:last-child{border:0}
+.row small{display:block;margin-top:5px;color:var(--muted);font-size:11px}
+.positive{color:var(--accent)}
+.negative{color:var(--red)}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:30px;line-height:1.7}
+dialog{
+  border:1px solid #ffffff1c;
+  border-radius:23px;
+  background:#191922;
+  color:var(--text);
+  width:min(760px,calc(100% - 24px));
+  max-height:92dvh;
+  padding:0;
+  box-shadow:0 30px 100px #0009;
+}
+dialog::backdrop{background:#000b;backdrop-filter:blur(8px)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border)}
+.modal-head h2{font-size:20px;margin:0}
+.modal-body{padding:24px}
+.close{padding:7px 12px;font-size:18px}
+.modal-info{color:var(--muted);font-size:13px;line-height:1.7}
+.form{display:flex;gap:10px;margin:18px 0}
+.form input{flex:1;width:100%}
+.quick{display:flex;gap:8px;flex-wrap:wrap}
+.result{text-align:center;margin:20px 0;font-size:29px;font-weight:900;min-height:40px}
+.reel{
+  height:135px;
+  position:relative;
+  overflow:hidden;
+  background:#0d0d14;
+  border:1px solid var(--border);
+  border-radius:15px;
+  margin:20px 0;
+}
+.reel:before,.reel:after{
+  content:"";
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:60px;
+  z-index:2;
+  pointer-events:none;
+}
+.reel:before{left:0;background:linear-gradient(90deg,#0d0d14,transparent)}
+.reel:after{right:0;background:linear-gradient(-90deg,#0d0d14,transparent)}
+.pointer{
+  position:absolute;
+  left:50%;
+  top:0;
+  bottom:0;
+  width:2px;
+  background:var(--accent);
+  z-index:3;
+  box-shadow:0 0 15px var(--accent);
+}
+.track{display:flex;gap:10px;height:100%;align-items:center;will-change:transform}
+.prize{
+  width:140px;
+  flex:0 0 140px;
+  height:105px;
+  background:linear-gradient(160deg,#292436,#17151f);
+  border:1px solid #ffffff15;
+  border-bottom:3px solid var(--prize-color,#9f78ff);
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  font-weight:900;
+  font-size:22px;
+}
+.prize small{color:var(--muted);font-size:10px;margin-top:10px;font-weight:normal}
+.odds{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0}
+.odd{background:#101017;border:1px solid var(--border);padding:12px;border-radius:10px;text-align:center;font-size:13px}
+.odd small{display:block;margin-top:7px;color:var(--muted)}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.actions button{min-width:160px}
+.toast{
+  position:fixed;
+  bottom:22px;
+  left:50%;
+  transform:translate(-50%,20px);
+  background:#2b2b39;
+  border:1px solid #ffffff22;
+  color:white;
+  padding:14px 22px;
+  border-radius:14px;
+  z-index:100;
+  opacity:0;
+  pointer-events:none;
+  transition:.2s;
+  max-width:calc(100% - 30px);
+  text-align:center;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.mine-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;max-width:420px;margin:20px auto}
+.mine-grid button{height:58px;font-size:22px;padding:0}
+.mine-grid button.safe{background:#beff4720;border-color:#beff4760;color:var(--accent)}
+.mine-grid button.mine{background:#ff668430;border-color:var(--red)}
+.game-stage{
+  height:190px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:radial-gradient(ellipse,#9f78ff17,#101017);
+  border:1px solid var(--border);
+  border-radius:17px;
+  margin:18px 0;
+  font-size:56px;
+  font-weight:1000;
+  color:var(--accent);
+}
+.steps{display:flex;gap:6px;justify-content:center;margin:20px 0}
+.steps i{height:10px;flex:1;max-width:65px;border-radius:6px;background:#353542}
+.steps i.done{background:var(--accent)}
+@media(max-width:1150px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:750px){
+  .header{padding:12px;gap:8px;flex-wrap:wrap}
+  .logo{font-size:21px}
+  .header button{padding:9px;font-size:12px}
+  .balance{font-size:15px}
+  main{padding:18px 12px 40px}
+  .hero{padding:24px}
+  .hero h1{font-size:28px}
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+  .card{padding:9px}
+  .art{height:108px}
+  .box{width:78px;height:60px;font-size:25px}
+  .game-grid{grid-template-columns:repeat(2,1fr)}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .modal-body{padding:17px}
+}
+@media(max-width:420px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .demo{display:none}
+  .header .withdraw-button{margin-left:auto}
+  .hero h1{font-size:25px}
+  .form{flex-wrap:wrap}
+  .form button{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{scroll-behavior:auto!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="header">
+    <div class="logo">CASH<span>DROP</span></div>
+    <span class="demo">ДЕМО</span>
+    <div class="balance">
+      <small>ВИРТУАЛЬНЫЙ БАЛАНС</small>
+      <span id="balance">0 ₽</span>
+    </div>
+    <button class="primary" id="deposit">＋ Пополнить</button>
+    <button class="withdraw-button" id="withdraw">Вывод</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Кейсы. Только денежные призы.</h1>
+    <p>
+      Открывай коллекции, сохраняй любимые кейсы и проверяй удачу
+      на виртуальном балансе. Никаких скинов и настоящих платежей.
+    </p>
+    <div class="tags">
+      <span class="tag" id="caseCount"></span>
+      <span class="tag">🎁 Бесплатные кейсы раз в 24 часа</span>
+      <span class="tag">💸 Демо-вывод от 100 ₽</span>
+      <span class="tag">💾 Локальное сохранение</span>
+    </div>
+  </section>
+
+  <nav class="tabs" id="tabs">
+    <button class="active" data-tab="cases">Все кейсы</button>
+    <button data-tab="favorites">★ Избранные <span id="favCount">(0)</span></button>
+    <button data-tab="games">Мини-игры</button>
+    <button data-tab="history">История</button>
+  </nav>
+
+  <div class="toolbar" id="toolbar">
+    <input id="search" placeholder="Найти кейс или коллекцию…" aria-label="Поиск">
+    <select id="category" aria-label="Категория">
+      <option value="">Все коллекции</option>
+    </select>
+    <select id="sort" aria-label="Сортировка">
+      <option value="default">По умолчанию</option>
+      <option value="cheap">Сначала дешевле</option>
+      <option value="expensive">Сначала дороже</option>
+      <option value="name">По названию</option>
+    </select>
+  </div>
+
+  <div id="content"></div>
+</main>
+
+<footer>
+  CASH DROP — независимый демонстрационный проект, не связанный с BullDrop.<br>
+  Все суммы виртуальные. Их нельзя обменять на настоящие деньги.<br>
+  Данные хранятся только в этом браузере. Очистка хранилища удалит прогресс.
+</footer>
+
+<dialog id="modal">
+  <div class="modal-head">
+    <h2 id="modalTitle"></h2>
+    <button class="close" id="closeModal" aria-label="Закрыть">×</button>
+  </div>
+  <div class="modal-body" id="modalBody"></div>
+</dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+"use strict";
+
+/* Все коллекции и цены из предоставленного списка.
+   Формат строки: название|цена|старая цена (необязательно).
+*/
+const GROUPS = [
+["Проклятый остров","🏝️",[
+"Райское извержение|19",
+"Розовый оазис|39",
+"Гавайский отдых|59",
+"Ядовитая флора|99",
+"Тропическое наслаждение|199",
+"Гнев тики|399",
+"Проклятый тотем|699",
+"Кахуна'ра|1499"
+]],
+["Бесплатные кейсы","🎁",[
+"Telegram|0",
+"VK|0",
+"Бриллиант|0",
+"Ежедневный бесплатный кейс - уровень 1|0"
+]],
+["Перчаточная коллекция","🧤",[
+"Багровый гонщик|5000",
+"Парчовый журавль|10000",
+"Фиолетовый бисер|15000",
+"Лаймовый поликомуфляж|20000",
+"Подушкобойки|25000",
+"Погоня за облаком|30000",
+"Оккультизм|35000",
+"Неоновое насилие|40000"
+]],
+["Hall of Fame","🏆",[
+"Legacy|349",
+"Clutch|699",
+"Major MVP|1399",
+"Champions|2699",
+"Hall of Fame|4990"
+]],
+["Major Champions","🥇",[
+"Shanghai 2024|1490",
+"Copenhagen 2024|1490",
+"Austin 2025|1990",
+"Budapest 2025|1990",
+"Cologne 2026|2990"
+]],
+["Сладкая серия","🍫",[
+"Twix|65","Snickers|70","Bounty|75","KitKat|135"
+]],
+["Милые Дамы","✨",[
+"Стюардесса|99","Секретарша|99","Официантка|99","Стримерша|99"
+]],
+["Компы","💻",[
+"Чебупицца|19","Админ|49","Энергос|89","Випка|129"
+]],
+["Редкости","💎",[
+"Армейское|29",
+"Запрещенное|98",
+"Засекреченное|369",
+"Тайное|4000",
+"Ножи|17500"
+]],
+["Инвентарь мечты","🌈",[
+"Sugar Rush|122","Printstream|440","Flame|1800","Wild Lotus|8600"
+]],
+["Любимые карты","🗺️",[
+"Anubis|52","Ancient|56","Overpass|60","Train|64",
+"Nuke|68","Inferno|72","Dust 2|76","Mirage|80"
+]],
+["Капсулы","🧪",[
+"B.I.G|170","Buster|180","Random|270","Fishki|280"
+]],
+["Особенная коллекция","👑",[
+"Серебро|500","Золото|1000","Платина|2500","Рубин|5000","Бриллиант|10000"
+]],
+["Качества","🔬",[
+"BATTLE-SCARRED|27","WELL-WORN|49","FIELD-TESTED|89",
+"MINIMAL WEAR|299","FACTORY NEW|599"
+]],
+["Оружейный склад","📦",[
+"P250|79","Glock|99","Deagle|129","USP|189",
+"M4A4|299","AK-47|359","M4A1-S|359","AWP|459"
+]],
+["Выбор игроков","⭐",[
+"Супер эконом|3","Эконом|5","AWP vs SSG|399","Запретный|25000"
+]],
+["Турниры","🎯",[
+"BLAST Austin|100|120","Blast Rivals|120|140",
+"ESL PRO League|140|160","IEM Dallas|160|180"
+]],
+["Звания","🎖️",[
+"Silver|49","Gold Nova|99","Master Guardian II|199","DMG|299",
+"Legendary Eagle|399","LEM|599","Supreme|999","The Global Elite|2999"
+]],
+["Агенты","🕶️",[
+"Доктор Романов|49","Номер К|119","Капитан Риксоу|149",
+"Дэррил в Майами|249","Агент Ава|349","Ярость Дэррила|499"
+]],
+["Тяночки","🌸",[
+"Бикини|139","Чулочная служба|139","Эльфийка|139","Невинность|139",
+"Грязные секреты|219","Нежное утро|219","Загадка хозяйки|219"
+]],
+["Это База","🧱",[
+"Сын маминой подруги|99","Базовый минимум|199",
+"Че так дорого?!|299","Биткоин|399"
+]],
+["Любимые игры","🎮",[
+"GTA V|36","Fortnite|40|80","VALORANT|44"
+]],
+["Камни превосходства","💠",[
+"Сапфир|11000","Рубин|17700","Изумруд|28700","Эферион|46400"
+]],
+["Короли дорог","🏎️",[
+"BMW M3|2000","Cybertruck|3000","Supra FF|4000","Dodge FF|5000",
+"Nissan FF2|6000","G63|7000","Ferrari|8000","Lamborghini|10000"
+]],
+["Легенды футбола","⚽",[
+"Неймар|400","Мбаппе|450","Роналдо|475","Месси|475",
+"Зидан|500","Яшин|525","Марадона|575","Пеле|600"
+]],
+["Легенды Кино","🎬",[
+"Тайлер Дерден|15","Райан Гослинг|35","Капитан Джек Воробей|55",
+"Скала|75","Джон Уик|95","Доминик Торетто|115",
+"Волтер Вайт|135","Ди Каприо|155"
+]],
+["В космосе","🪐",[
+"Нейтронная звезда|27","Чёрная дыра|37","Туманность|67","Тёмная материя|87"
+]],
+["Быки","🐂",[
+"Бронзовый бык|36","Серебряный бык|75","Золотой бык|229","Платиновый бык|899"
+]]
+];
+
+const COLORS = ["#beff47","#9f78ff","#ff78aa","#58d9ff","#ffba68","#8f9dff"];
+const CASES = [];
+GROUPS.forEach(([category,icon,items],gi)=>{
+  items.forEach((line,ci)=>{
+    const [name,price,old] = line.split("|");
+    CASES.push({
+      id:gi+"-"+ci,
+      category,icon,name,
+      price:Number(price),
+      old:Number(old)||0,
+      unavailable:category==="Особенная коллекция",
+      color:COLORS[gi%COLORS.length]
+    });
+  });
+});
+
+const KEY = "cash-drop-demo-v1";
+const $ = id=>document.getElementById(id);
+const money = n=>new Intl.NumberFormat("ru-RU",{
+  minimumFractionDigits:Number.isInteger(n)?0:2,
+  maximumFractionDigits:2
+}).format(n)+" ₽";
+const esc = s=>String(s).replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+const fresh = ()=>({
+  balance:10000,
+  favorites:[],
+  free:{},
+  history:[],
+  opened:0,
+  spent:0,
+  won:0,
+  withdrawn:0,
+  round:null
+});
+let state;
+try{
+  const raw=JSON.parse(localStorage.getItem(KEY)||"null");
+  state=raw&&typeof raw==="object"?Object.assign(fresh(),raw):fresh();
+}catch{state=fresh()}
+for(const k of ["balance","opened","spent","won","withdrawn"]){
+  if(!Number.isFinite(state[k])||state[k]<0)state[k]=fresh()[k];
+}
+if(!Array.isArray(state.favorites))state.favorites=[];
+if(!Array.isArray(state.history))state.history=[];
+if(!state.free||typeof state.free!=="object")state.free={};
+state.favorites=state.favorites.filter(id=>CASES.some(c=>c.id===id));
+let storageWarned=false;
+function save(){
+  try{localStorage.setItem(KEY,JSON.stringify(state))}
+  catch{
+    if(!storageWarned){
+      storageWarned=true;
+      toast("Хранилище недоступно: прогресс сохранится только до закрытия страницы");
+    }
+  }
+}
+function log(title,amount){
+  state.history.unshift({title,amount,time:Date.now()});
+  state.history=state.history.slice(0,150);
+}
+function update(){
+  $("balance").textContent=money(state.balance);
+  $("favCount").textContent="("+state.favorites.length+")";
+}
+function toast(text){
+  $("toast").textContent=text;
+  $("toast").classList.add("show");
+  clearTimeout(toast.timer);
+  toast.timer=setTimeout(()=>$("toast").classList.remove("show"),3200);
+}
+function random(){
+  if(globalThis.crypto&&crypto.getRandomValues){
+    const a=new Uint32Array(1);
+    crypto.getRandomValues(a);
+    return a[0]/4294967296;
+  }
+  return Math.random();
+}
+function roundMoney(n){return Math.round(n*100)/100}
+function pay(n,title){
+  if(!Number.isFinite(n)||n<=0||n>1000000){toast("Сумма: от 1 до 1 000 000 ₽");return false}
+  if(state.balance<n){toast("Не хватает виртуальных рублей");return false}
+  state.balance=roundMoney(state.balance-n);
+  state.spent=roundMoney(state.spent+n);
+  log(title,-n);
+  save();update();
+  return true;
+}
+function credit(n,title){
+  state.balance=roundMoney(state.balance+n);
+  state.won=roundMoney(state.won+n);
+  log(title,n);
+  save();update();
+}
+let tab="cases";
+let busy=false;
+let cleanup=null;
+
+function showModal(title,html){
+  if(busy){toast("Сначала заверши текущий раунд");return}
+  if(cleanup){cleanup();cleanup=null}
+  $("modalTitle").textContent=title;
+  $("modalBody").innerHTML=html;
+  if(!$("modal").open)$("modal").showModal();
+}
+function closeModal(){
+  if(busy){toast("Заверши раунд или забери результат");return}
+  if(cleanup){cleanup();cleanup=null}
+  $("modal").close();
+}
+$("closeModal").onclick=closeModal;
+$("modal").addEventListener("cancel",e=>{
+  e.preventDefault();closeModal();
+});
+$("modal").addEventListener("click",e=>{
+  if(e.target===$("modal")){
+    const r=$("modal").getBoundingClientRect();
+    if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeModal();
+  }
+});
+
+$("caseCount").textContent=CASES.length+" кейсов · "+GROUPS.length+" коллекций";
+GROUPS.forEach(([name])=>{
+  const option=document.createElement("option");
+  option.value=name;option.textContent=name;
+  $("category").append(option);
+});
+$("tabs").onclick=e=>{
+  const button=e.target.closest("[data-tab]");
+  if(!button)return;
+  tab=button.dataset.tab;
+  document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  render();
+};
+["search","category","sort"].forEach(id=>$(id).addEventListener("input",render));
+
+function render(){
+  update();
+  $("toolbar").style.display=(tab==="cases"||tab==="favorites")?"flex":"none";
+  if(tab==="games"){renderGames();return}
+  if(tab==="history"){renderHistory();return}
+  const query=$("search").value.trim().toLowerCase();
+  const category=$("category").value;
+  let list=CASES.filter(c=>
+    (!category||c.category===category)&&
+    (!query||(c.name+" "+c.category).toLowerCase().includes(query))&&
+    (tab!=="favorites"||state.favorites.includes(c.id))
+  );
+  if(!list.length){
+    $("content").innerHTML='<div class="empty">Ничего не найдено. Добавляй кейсы в избранное кнопкой ★.</div>';
+    return;
+  }
+  const sort=$("sort").value;
+  if(sort!=="default"){
+    list.sort((a,b)=>sort==="cheap"?a.price-b.price:sort==="expensive"?b.price-a.price:a.name.localeCompare(b.name,"ru"));
+    $("content").innerHTML='<div class="grid">'+list.map(card).join("")+'</div>';
+  }else{
+    $("content").innerHTML=GROUPS.map(([group,icon])=>{
+      const items=list.filter(c=>c.category===group);
+      return items.length?`<h2 class="section-title">${icon} ${esc(group)} <small>${items.length} кейсов</small></h2><div class="grid">${items.map(card).join("")}</div>`:"";
+    }).join("");
+  }
+}
+function card(c){
+  const chosen=state.favorites.includes(c.id);
+  const discount=c.old?Math.round((1-c.price/c.old)*100):0;
+  return `<article class="card ${c.unavailable?"unavailable":""}" style="--case-color:${c.color}">
+    <button class="favorite ${chosen?"chosen":""}" data-fav="${c.id}" aria-label="Избранное">★</button>
+    ${discount?`<span class="badge">−${discount}%</span>`:""}
+    <div class="art"><div class="box">${c.icon}</div></div>
+    <h3>${esc(c.name)}</h3>
+    <div class="price">${c.old?`<del>${money(c.old)}</del>`:""}${c.price?money(c.price):"Бесплатно"}</div>
+    <button class="open ${c.unavailable?"":"primary"}" data-case="${c.id}" ${c.unavailable?"disabled":""}>
+      ${c.unavailable?"Недоступно":"Открыть кейс"}
+    </button>
+  </article>`;
+}
+$("content").onclick=e=>{
+  const favorite=e.target.closest("[data-fav]");
+  if(favorite){
+    const id=favorite.dataset.fav;
+    state.favorites=state.favorites.includes(id)?state.favorites.filter(x=>x!==id):[...state.favorites,id];
+    save();render();return;
+  }
+  const c=e.target.closest("[data-case]");
+  if(c){openCase(CASES.find(x=>x.id===c.dataset.case));return}
+  const game=e.target.closest("[data-game]");
+  if(game)openGame(game.dataset.game);
+};
+
+function wallet(type){
+  const deposit=type==="deposit";
+  showModal(deposit?"Бесплатное демо-пополнение":"Демо-вывод от 100 ₽",`
+    <p class="modal-info">${deposit?
+      "Начисляет виртуальные рубли. Никаких списаний с карты, реквизитов и реальных платежей.":
+      "Это имитация вывода: сумма спишется с игрового баланса и попадёт в историю. Настоящий перевод не выполняется."}</p>
+    <div class="form">
+      <input id="walletAmount" type="number" min="${deposit?1:100}" max="1000000" step="0.01" value="${deposit?10000:100}" aria-label="Сумма">
+      <button class="primary" id="walletConfirm">${deposit?"Начислить":"Демо-вывод"}</button>
+    </div>
+    <div class="quick">${[100,1000,10000,100000].map(n=>`<button data-amount="${n}">${money(n)}</button>`).join("")}</div>
+    <p class="modal-info">Баланс: ${money(state.balance)}. Все средства виртуальные.</p>
+  `);
+  $("modalBody").querySelectorAll("[data-amount]").forEach(b=>b.onclick=()=>$("walletAmount").value=b.dataset.amount);
+  $("walletConfirm").onclick=()=>{
+    const n=roundMoney(Number($("walletAmount").value));
+    if(!Number.isFinite(n)||n<(deposit?1:100)||n>1000000){toast("Проверь сумму");return}
+    if(!deposit&&n>state.balance){toast("Недостаточно средств");return}
+    state.balance=roundMoney(state.balance+(deposit?n:-n));
+    if(!deposit)state.withdrawn=roundMoney(state.withdrawn+n);
+    log(deposit?"Демо-пополнение":"Демо-вывод • без перевода",deposit?n:-n);
+    save();update();render();closeModal();
+    toast(deposit?"Виртуальный баланс пополнен":"Демо-вывод записан. Реального перевода нет");
+  };
+}
+$("deposit").onclick=()=>wallet("deposit");
+$("withdraw").onclick=()=>wallet("withdraw");
+
+/* Шансы одинаковы для всех платных кейсов.
+   Возврат до округления: 71% стоимости, без обещания прибыли.
+*/
+const DISTRIBUTION=[
+  {x:0,p:35,color:"#77778e"},
+  {x:.5,p:35,color:"#79aaff"},
+  {x:1,p:18,color:"#9f78ff"},
+  {x:2,p:9,color:"#ff78aa"},
+  {x:5,p:2.5,color:"#ffd569"},
+  {x:10,p:.5,color:"#beff47"}
+];
+function pickPrize(base){
+  let r=random()*100;
+  for(const item of DISTRIBUTION){
+    r-=item.p;
+    if(r<0)return {...item,value:roundMoney(base*item.x)};
+  }
+  const last=DISTRIBUTION.at(-1);
+  return {...last,value:roundMoney(base*last.x)};
+}
+function cooldown(c){
+  return Math.max(0,(Number(state.free[c.id])||0)+86400000-Date.now());
+}
+function waitText(ms){
+  const minutes=Math.ceil(ms/60000);
+  return Math.floor(minutes/60)+" ч "+minutes%60+" мин";
+}
+function openCase(c){
+  if(!c||c.unavailable)return;
+  const base=c.price||100;
+  const wait=c.price?0:cooldown(c);
+  showModal(c.name,`
+    <p class="modal-info">${esc(c.category)} · ${c.price?money(c.price):"Бесплатно раз в 24 часа"}
+    <br>Выигрыш — виртуальные рубли, автоматически зачисляются на баланс.</p>
+    <div class="reel" id="reel"><div class="pointer"></div><div class="track" id="track"></div></div>
+    <div class="result" id="caseResult">Готов к открытию?</div>
+    <div class="actions"><button class="primary" id="spinCase" ${wait?"disabled":""}>${wait?"Через "+waitText(wait):"Открыть • "+(c.price?money(c.price):"бесплатно")}</button></div>
+    <h3>Возможные призы и точные шансы</h3>
+    <div class="odds">${DISTRIBUTION.map(d=>`<div class="odd">${money(roundMoney(base*d.x))}<small>${d.p}% · ×${d.x}</small></div>`).join("")}</div>
+    <p class="modal-info">
+      У платных кейсов средний возврат до округления — 71% стоимости.
+      Отдельное открытие может закончиться потерей всей цены кейса.
+      Бесплатным кейсам не нужны подписки или внешние аккаунты.
+    </p>
+  `);
+  if(busy)return;
+  const button=$("spinCase");
+  if(!button)return;
+  fillReel(base,null);
+  button.onclick=()=>{
+    if(busy)return;
+    if(!c.price&&cooldown(c)){toast("Бесплатный кейс пока недоступен");return}
+    if(c.price&&!pay(c.price,"Кейс: "+c.name))return;
+    if(!c.price)state.free[c.id]=Date.now();
+    const prize=pickPrize(base);
+
+    // Результат зачисляется и сохраняется ДО анимации.
+    // Обновление страницы не отменяет списание и не меняет приз.
+    state.opened++;
+    credit(prize.value,"Приз: "+c.name);
+    busy=true;
+    button.disabled=true;
+    $("caseResult").textContent="Открываем…";
+    fillReel(base,prize);
+    const track=$("track");
+    const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const duration=reduced?80:3700;
+    const target=$("reel").clientWidth/2-(32*150+70);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      track.style.transition=`transform ${duration}ms cubic-bezier(.12,.76,.12,1)`;
+      track.style.transform=`translateX(${target}px)`;
+    }));
+    setTimeout(()=>{
+      busy=false;
+      $("caseResult").textContent=prize.value?"Выпало "+money(prize.value):"Выпало 0 ₽";
+      $("caseResult").style.color=prize.color;
+      button.disabled=!c.price;
+      button.textContent=c.price?"Открыть ещё • "+money(c.price):"Следующее открытие через 24 часа";
+      render();
+    },duration+100);
+  };
+}
+function fillReel(base,winner){
+  const track=$("track");
+  track.style.transition="none";
+  track.style.transform="translateX(0)";
+  track.innerHTML=Array.from({length:40},(_,i)=>{
+    const p=i===32&&winner?winner:pickPrize(base);
+    return `<div class="prize" style="--prize-color:${p.color}">${money(p.value)}<small>ВИРТУАЛЬНЫЙ ПРИЗ</small></div>`;
+  }).join("");
+}
+
+const GAMES=[
+  ["mines","💣","Сапёр","25 клеток, 3 мины"],
+  ["roulette","🎯","Рулетка","Красное / чёрное / зелёное"],
+  ["crash","🚀","Краш","Забери до остановки"],
+  ["ladder","🪜","Лесенка","Выбирай безопасную ступень"],
+  ["tower","🏰","Башня","Одна ловушка на этаж"],
+  ["wheel","🎡","Колесо","Денежные множители"],
+  ["upgrade","⚡","Апгрейд","Рискни суммой ради ×2"],
+  ["contract","📄","Контракты","Три суммы — один результат"]
+];
+function renderGames(){
+  $("content").innerHTML=`
+    <h2 class="section-title">Мини-игры <small>Только виртуальные рубли</small></h2>
+    <div class="game-grid">${GAMES.map(([id,icon,name,desc])=>`
+      <button class="game-card" data-game="${id}">
+        <div class="game-icon">${icon}</div><b>${name}</b><span>${desc}</span>
+      </button>`).join("")}</div>
+    <p class="modal-info">Условия и вероятность выигрыша показаны перед каждой игрой. Закрытие страницы во время незавершённой интерактивной игры считается проигрышем.</p>`;
+}
+function renderHistory(){
+  $("content").innerHTML=`
+    <h2 class="section-title">Статистика и история</h2>
+    <div class="stats">
+      <div class="stat"><small>Открыто кейсов</small><b>${state.opened}</b></div>
+      <div class="stat"><small>Потрачено в играх</small><b>${money(state.spent)}</b></div>
+      <div class="stat"><small>Получено призов</small><b>${money(state.won)}</b></div>
+      <div class="stat"><small>Демо-вывод</small><b>${money(state.withdrawn)}</b></div>
+    </div>
+    <div class="history">${state.history.length?state.history.map(h=>`
+      <div class="row"><div>${esc(h.title)}<small>${new Date(h.time).toLocaleString("ru-RU")}</small></div>
+      <b class="${h.amount>0?"positive":h.amount<0?"negative":"muted"}">${h.amount>0?"+":""}${money(h.amount)}</b></div>
+    `).join(""):'<div class="empty">Пока нет операций</div>'}</div>`;
+}
+function stakeValue(){
+  const n=roundMoney(Number($("stake").value));
+  if(!Number.isFinite(n)||n<1||n>1000000){toast("Ставка от 1 до 1 000 000 ₽");return null}
+  return n;
+}
+function beginRound(name,stake){
+  if(!pay(stake,"Ставка: "+name))return false;
+  busy=true;
+  state.round={name,stake,time:Date.now()};
+  save();
+  $("stake").disabled=true;
+  $("startGame").disabled=true;
+  return true;
+}
+function finishRound(name,amount){
+  state.round=null;
+  if(amount>0)credit(amount,"Выигрыш: "+name);
+  else{log("Проигрыш: "+name,0);save();update()}
+  busy=false;
+  $("stake").disabled=false;
+  $("startGame").disabled=false;
+  render();
+}
+function openGame(id){
+  const game=GAMES.find(g=>g[0]===id);
+  if(!game)return;
+  const rules={
+    mines:"3 мины среди 25 клеток. Первый безопасный ход: 22/25. Выплата = ставка × 0,95 / вероятность всех выбранных безопасных ходов. До первого хода можно вернуть ставку.",
+    roulette:"37 равновероятных чисел: 0–36. Красное и чёрное: шанс 18/37, выплата ×2. Зелёное: шанс 1/37, выплата ×36. Выплата включает ставку.",
+    crash:"Коэффициент растёт. Для целевого ×k вероятность дожить до него — примерно 0,95/k. Есть 5% вероятности мгновенного краша. При скрытии вкладки раунд проигран.",
+    ladder:"На каждой ступени два варианта, один безопасный. Шанс пройти шаг — 50%. После n шагов выплата ×(0,95 × 2ⁿ). Максимум 8 шагов.",
+    tower:"На каждом этаже три варианта, один — ловушка. Шанс пройти этаж — 2/3. После n этажей выплата ×(0,95 × 1,5ⁿ). Максимум 8 этажей.",
+    wheel:"Шансы: ×0 — 40%; ×0,5 — 30%; ×1 — 15%; ×2 — 10%; ×5 — 4%; ×10 — 1%. Средний возврат — 80%.",
+    upgrade:"Шанс 45% получить ×2 от ставки. Иначе выплата 0 ₽. Средний возврат — 90%.",
+    contract:"Контракт списывает три одинаковые суммы. Шансы итогового множителя от общей суммы: ×0 — 30%; ×0,5 — 30%; ×1 — 25%; ×2 — 12%; ×5 — 3%. Средний возврат — 79%."
+  };
+  showModal(game[2],`
+    <p class="modal-info">${rules[id]}</p>
+    <div class="form">
+      <input id="stake" type="number" min="1" max="1000000" step="0.01" value="100" aria-label="Ставка">
+      <button class="primary" id="startGame">${id==="contract"?"Внести три суммы":"Начать"}</button>
+    </div>
+    <div id="gameArea"></div>
+    <div class="result" id="gameResult"></div>
+    <div class="actions" id="gameActions"></div>
+    <p class="modal-info">Это демо. Реальные деньги не используются.</p>
+  `);
+  if(busy||!$("startGame"))return;
+  if(id==="mines")setupMines();
+  else if(id==="ladder"||id==="tower")setupSteps(id);
+  else if(id==="crash")setupCrash();
+  else setupInstant(id);
+}
+
+/* Сапёр */
+function setupMines(){
+  $("gameArea").innerHTML='<div class="mine-grid" id="mineGrid"></div>';
+  let mines=new Set(),opened=new Set(),stake=0,active=false;
+  function board(reveal=false){
+    $("mineGrid").innerHTML=Array.from({length:25},(_,i)=>`
+      <button data-cell="${i}" class="${opened.has(i)?"safe":reveal&&mines.has(i)?"mine":""}" ${!active||opened.has(i)?"disabled":""}>
+        ${opened.has(i)?"◆":reveal&&mines.has(i)?"💣":"?"}
+      </button>`).join("");
+  }
+  function multiplier(){
+    if(!opened.size)return 1;
+    let chance=1;
+    for(let i=0;i<opened.size;i++)chance*=(22-i)/(25-i);
+    return .95/chance;
+  }
+  function controls(){
+    $("gameActions").innerHTML='<button class="primary" id="cashOut">Забрать '+money(roundMoney(stake*multiplier()))+'</button>';
+    $("cashOut").onclick=()=>{
+      if(!active)return;
+      const payout=roundMoney(stake*multiplier());
+      active=false;
+      board(true);
+      $("gameActions").innerHTML="";
+      $("gameResult").textContent="Получено "+money(payout);
+      finishRound("Сапёр",payout);
+    };
+  }
+  board();
+  $("startGame").onclick=()=>{
+    const n=stakeValue();
+    if(n===null||!beginRound("Сапёр",n))return;
+    stake=n;active=true;opened=new Set();mines=new Set();
+    while(mines.size<3)mines.add(Math.floor(random()*25));
+    $("gameResult").textContent="Выбери клетку";
+    board();controls();
+  };
+  $("mineGrid").onclick=e=>{
+    const b=e.target.closest("[data-cell]");
+    if(!b||!active)return;
+    const i=Number(b.dataset.cell);
+    if(opened.has(i))return;
+    if(mines.has(i)){
+      active=false;board(true);
+      $("gameActions").innerHTML="";
+      $("gameResult").textContent="Мина. Выплата 0 ₽";
+      finishRound("Сапёр",0);
+    }else{
+      opened.add(i);board();controls();
+      $("gameResult").textContent="Безопасно · ×"+multiplier().toFixed(2);
+      if(opened.size===22)$("cashOut").click();
+    }
+  };
+}
+
+/* Лесенка и башня */
+function setupSteps(id){
+  const tower=id==="tower";
+  const name=tower?"Башня":"Лесенка";
+  const count=tower?3:2;
+  let active=false,step=0,stake=0;
+  const mult=()=>step?.95*Math.pow(tower?1.5:2,step):1;
+  function draw(){
+    $("gameArea").innerHTML=`
+      <div class="game-stage">${step} / 8</div>
+      <div class="steps">${Array.from({length:8},(_,i)=>`<i class="${i<step?"done":""}"></i>`).join("")}</div>`;
+    $("gameActions").innerHTML=active?`
+      ${Array.from({length:count},(_,i)=>`<button data-step="${i}">${tower?"Дверь":"Ступень"} ${i+1}</button>`).join("")}
+      <button class="primary" id="stepCash">Забрать ${money(roundMoney(stake*mult()))}</button>`:"";
+    if(active){
+      $("gameActions").querySelectorAll("[data-step]").forEach(b=>b.onclick=()=>{
+        const trap=Math.floor(random()*count);
+        const picked=Number(b.dataset.step);
+        const safe=tower?picked!==trap:picked===trap;
+        if(!safe){
+          active=false;
+          $("gameResult").textContent="Ловушка. Выплата 0 ₽";
+          draw();finishRound(name,0);return;
+        }
+        step++;
+        $("gameResult").textContent="Успех · ×"+mult().toFixed(2);
+        draw();
+        if(step===8)$("stepCash").click();
+      });
+      $("stepCash").onclick=()=>{
+        const payout=roundMoney(stake*mult());
+        active=false;
+        draw();
+        $("gameResult").textContent="Получено "+money(payout);
+        finishRound(name,payout);
+      };
+    }
+  }
+  draw();
+  $("startGame").onclick=()=>{
+    const n=stakeValue();
+    if(n===null||!beginRound(name,n))return;
+    stake=n;step=0;active=true;
+    $("gameResult").textContent="Выбери путь";
+    draw();
+  };
+}
+
+/* Краш: коэффициент привязан к реальному времени. */
+function setupCrash(){
+  let active=false,stake=0,start=0,limit=1,raf=0;
+  const current=()=>Math.exp((performance.now()-start)/5000);
+  $("gameArea").innerHTML='<div class="game-stage" id="crashValue">×1.00</div>';
+  function stop(win){
+    if(!active)return;
+    active=false;
+    cancelAnimationFrame(raf);
+    const x=current();
+    const payout=win&&x<limit?roundMoney(stake*x):0;
+    $("gameActions").innerHTML="";
+    $("crashValue").textContent="×"+(payout?x:limit).toFixed(2);
+    $("crashValue").style.color=payout?"var(--accent)":"var(--red)";
+    $("gameResult").textContent=payout?"Получено "+money(payout):"Краш. Выплата 0 ₽";
+    finishRound("Краш",payout);
+  }
+  function tick(){
+    if(!active)return;
+    const x=current();
+    if(x>=limit){stop(false);return}
+    $("crashValue").textContent="×"+x.toFixed(2);
+    $("crashCash").textContent="Забрать "+money(roundMoney(stake*x));
+    raf=requestAnimationFrame(tick);
+  }
+  function visibility(){if(document.hidden&&active)stop(false)}
+  document.addEventListener("visibilitychange",visibility);
+  cleanup=()=>{
+    cancelAnimationFrame(raf);
+    document.removeEventListener("visibilitychange",visibility);
+  };
+  $("startGame").onclick=()=>{
+    const n=stakeValue();
+    if(n===null||!beginRound("Краш",n))return;
+    stake=n;start=performance.now();active=true;
+    limit=Math.min(1000,Math.max(1,.95/Math.max(random(),.000001)));
+    $("crashValue").style.color="var(--accent)";
+    $("gameResult").textContent="Забери до краша";
+    $("gameActions").innerHTML='<button class="primary" id="crashCash">Забрать</button>';
+    $("crashCash").onclick=()=>stop(current()<limit);
+    tick();
+  };
+}
+
+/* Игры с мгновенным исходом и визуальной анимацией. */
+function setupInstant(id){
+  const names={roulette:"Рулетка",wheel:"Колесо",upgrade:"Апгрейд",contract:"Контракты"};
+  const name=names[id];
+  if(id==="roulette"){
+    $("gameActions").innerHTML=`
+      <select id="rouletteColor" aria-label="Цвет">
+        <option value="red">Красное ×2</option>
+        <option value="black">Чёрное ×2</option>
+        <option value="green">Зелёное ×36</option>
+      </select>`;
+  }
+  $("gameArea").innerHTML='<div class="game-stage" id="instantValue">?</div>';
+  const red=new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]);
+  function weighted(entries){
+    let r=random()*100;
+    for(const [x,p] of entries){r-=p;if(r<0)return x}
+    return entries.at(-1)[0];
+  }
+  $("startGame").onclick=()=>{
+    const value=stakeValue();
+    if(value===null)return;
+    const stake=id==="contract"?roundMoney(value*3):value;
+    if(!pay(stake,"Ставка: "+name))return;
+    busy=true;
+    $("stake").disabled=true;
+    $("startGame").disabled=true;
+    let payout=0,label="",color="var(--purple)";
+    if(id==="roulette"){
+      const number=Math.floor(random()*37);
+      const landed=number===0?"green":red.has(number)?"red":"black";
+      const pick=$("rouletteColor").value;
+      $("rouletteColor").disabled=true;
+      const mult=pick===landed?(landed==="green"?36:2):0;
+      payout=roundMoney(stake*mult);
+      label=String(number);
+      color=landed==="red"?"var(--red)":landed==="green"?"var(--accent)":"#eeeeff";
+    }else{
+      const mult=id==="upgrade"?(random()<.45?2:0):
+        id==="contract"?weighted([[0,30],[.5,30],[1,25],[2,12],[5,3]]):
+        weighted([[0,40],[.5,30],[1,15],[2,10],[5,4],[10,1]]);
+      payout=roundMoney(stake*mult);
+      label="×"+mult;
+      color=payout?"var(--accent)":"var(--red)";
+    }
+
+    // Итог сохраняется до начала визуальной анимации.
+    credit(payout,"Результат: "+name);
+    $("gameResult").textContent="Определяем результат…";
+    const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const duration=reduced?80:1600;
+    const interval=setInterval(()=>{
+      $("instantValue").textContent=id==="roulette"?Math.floor(random()*37):"×"+[0,.5,1,2,5,10][Math.floor(random()*6)];
+    },80);
+    setTimeout(()=>{
+      clearInterval(interval);
+      $("instantValue").textContent=label;
+      $("instantValue").style.color=color;
+      $("gameResult").textContent=payout?"Получено "+money(payout):"Выплата 0 ₽";
+      busy=false;
+      $("stake").disabled=false;
+      $("startGame").disabled=false;
+      if(id==="roulette")$("rouletteColor").disabled=false;
+      render();
+    },duration);
+  };
+}
+
+/* Незавершённые интерактивные раунды не восстанавливаются:
+   ставка уже списана. Это исключает повторный выбор после обновления.
+*/
+if(state.round){
+  log("Незавершённый раунд: "+String(state.round.name||"игра")+" • проигрыш",0);
+  state.round=null;
+}
+save();
+render();
+update();
+</script>
+</body>
+</html>
